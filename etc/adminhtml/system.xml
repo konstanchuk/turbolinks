@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * TurboLinks Extension for Magento 2
+ *
+ * @author     Volodymyr Konstanchuk http://konstanchuk.com
+ * @copyright  Copyright (c) 2017 The authors
+ * @license    http://www.opensource.org/licenses/mit-license.html  MIT License
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="web" translate="label" sortOrder="1" showInDefault="1"
+                 showInWebsite="1" showInStore="1">
+            <tab>general</tab>
+            <resource>Magento_Backend::web</resource>
+            <group id="konstanchuk_turbolinks" translate="label" type="text" sortOrder="100" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>TurboLinks</label>
+                <field id="loader_color" translate="label" type="text" sortOrder="10" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Loader Color</label>
+                    <comment><![CDATA[Background color]]></comment>
+                    <frontend_model>Konstanchuk\TurboLinks\Block\Color</frontend_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

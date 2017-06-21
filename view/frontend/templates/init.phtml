@@ -1,0 +1,86 @@
+<?php
+
+/**
+ * TurboLinks Extension for Magento 2
+ *
+ * @author     Volodymyr Konstanchuk http://konstanchuk.com
+ * @copyright  Copyright (c) 2017 The authors
+ * @license    http://www.opensource.org/licenses/mit-license.html  MIT License
+ */
+
+/** @var Konstanchuk\TurboLinks\Block\Init $block */
+
+$helper = $block->getHelper();
+
+if ($helper->getLoaderColor()): ?>
+    <style type="text/css">
+        .turbolinks-progress-bar {
+            background-color: <?php echo $block->escapeHtml($helper->getLoaderColor()); ?>;
+        }
+    </style>
+<?php endif; ?>
+<?php
+/*
+ * The following code does not need to place in separate JS file,
+ * because here the library is initialized.
+ */
+?>
+<script type="text/javascript">
+    require([
+        'jquery',
+        'mage/apply/main',
+        'Magento_Customer/js/customer-data',
+        'ko',
+        'https://cdnjs.cloudflare.com/ajax/libs/turbolinks/5.0.0/turbolinks.min.js'
+    ], function ($, mage, customerData, ko) {
+        var $document = $(document);
+
+        $.turbo = {
+            version: '3.0.0',
+            isReady: false,
+            use: function (load, fetch) {
+                return $document.off('.turbo').on("" + load + ".turbo", this.onLoad).on("" + fetch + ".turbo", this.onFetch);
+            },
+            addCallback: function (callback) {
+                if ($.turbo.isReady) {
+                    callback($);
+                }
+                return $document.on('turbo:ready', function () {
+                    return callback($);
+                });
+            },
+            onLoad: function () {
+                $.turbo.isReady = true;
+                return $document.trigger('turbo:ready');
+            },
+            onFetch: function () {
+                return $.turbo.isReady = false;
+            },
+            register: function () {
+                $(this.onLoad);
+                return $.fn.ready = this.addCallback;
+            }
+        };
+
+        $.turbo.register();
+        $.turbo.use('turbolinks:load', 'page:change');
+
+        if (Turbolinks.supported) {
+            $(document).on('turbolinks:request-start', function () {
+                // add some functions in future
+            });
+            $(document).on('page:change', function () {
+                // add some functions in future
+            });
+            $(document).on('turbolinks:load', function () {
+                mage.apply();
+                ko.applyBindings();
+                var sections = ['cart']; // add some sections in future
+                customerData.invalidate(sections);
+                customerData.reload(sections, true);
+            });
+        } else {
+            // add some functions in future
+        }
+    });
+</script>
